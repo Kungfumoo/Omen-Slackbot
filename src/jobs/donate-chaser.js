@@ -49,6 +49,7 @@ class DonateChaser extends Job {
             }
 
             channel.send("Missing donations from:" + mentions);
+            channel.send("Oh...and Tom's anus looks like a punched lasagna.");
             this.processed = new Date();
         });
     }

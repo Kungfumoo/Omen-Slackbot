@@ -3,7 +3,7 @@
     "version": "0.0.1",
     "description": "Bot to remind slacking raiders",
     "main": "src/bot.js",
-    "author": "Kungfumoo (Aaron Winter)",
+    "author": "Kungfumoo (Aaron Winter). But mostly Nick.",
     "dependencies": {
         "discord.js": "^11.4.2",
         "mysql": "^2.16.0"
