@@ -7,7 +7,8 @@ CREATE TABLE discordUsers (
 
 CREATE TABLE missingDonations (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    name VARCHAR(255)
+    name VARCHAR(255),
+    missing INT DEFAULT 0
 );
 
 CREATE TABLE signs(
