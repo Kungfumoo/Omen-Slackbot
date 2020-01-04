@@ -22,18 +22,30 @@ class RaidEventHandler extends Job {
             
         channel.send(embed)
                .then((message) => {
+                   //Bot does initial reactions so people can just click
+                   message.react(TICK_EMOJI)
+                          .then(() => {
+                              message.react(CROSS_EMOJI);
+                          }); //exploiting the promise to format the reactions in the right order
+
                    //cache signups and unsign ids
                    message.signUps = [];
                    message.unsigns = [];
 
+                   //set up collector for raider signs
                    let collector = message.createReactionCollector(
-                       this._reactionFilter,
+                       this._reactionFilter, //filter function for reactions (don't want non raiders)
                        { time: 15000 }
                    );
 
                    collector.on('collect', (reaction) => {
                        let emoji = reaction.emoji.name;
                        let user = reaction.users.last();
+
+                       //Ignore slackbot and other bots
+                       if (user.bot) {
+                           return;
+                       }
 
                        if (emoji == TICK_EMOJI) {
                            this.handleSign(user);
@@ -44,7 +56,7 @@ class RaidEventHandler extends Job {
 
                    collector.on('end', () => {
                        console.log("end");
-                       //TODO:
+                       //TODO: do we clear up events here?
                    });
                })
                .catch(console.error);
