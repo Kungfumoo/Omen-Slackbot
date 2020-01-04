@@ -36,9 +36,7 @@ class RaidEventHandler extends Job {
             .setColor(0xFF0000)
             .addField("Date", date.toLocaleDateString(
                 "en-GB",
-                {
-                    "weekdays": "long"
-                }
+                { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }
             ))
             .setFooter(eventMeta.description);
     }
