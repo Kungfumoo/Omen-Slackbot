@@ -2,6 +2,8 @@
 
 const { RichEmbed } = require('discord.js');
 const Job = require("./job.js");
+const TICK_EMOJI = '✅';
+const CROSS_EMOJI = '❌';
 
 class RaidEventHandler extends Job {
     onInterval() {
@@ -18,13 +20,44 @@ class RaidEventHandler extends Job {
         //Publish new events
         const embed = this._createEventRichEmbed(new Date());
             
-        channel.send(embed);
+        channel.send(embed)
+               .then((message) => {
+                   //cache signups and unsign ids
+                   message.signUps = [];
+                   message.unsigns = [];
+
+                   let collector = message.createReactionCollector(
+                       this._reactionFilter,
+                       { time: 15000 }
+                   );
+
+                   collector.on('collect', (reaction) => {
+                       let emoji = reaction.emoji.name;
+                       let user = reaction.users.last();
+
+                       if (emoji == TICK_EMOJI) {
+                           this.handleSign(user);
+                       } else if (emoji == CROSS_EMOJI) {
+                           this.handleUnsign(user);
+                       }
+                   });
+
+                   collector.on('end', () => {
+                       console.log("end");
+                       //TODO:
+                   });
+               })
+               .catch(console.error);
 
         this.processed = true;
     }
 
-    handleReaction() {
+    handleSign(user) {
+        console.log("Signed " + user.username);
+    }
 
+    handleUnsign(user) {
+        console.log("Unsigned " + user.username);
     }
 
     _createEventRichEmbed(date) {
@@ -39,6 +72,12 @@ class RaidEventHandler extends Job {
                 { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }
             ))
             .setFooter(eventMeta.description);
+    }
+
+    _reactionFilter(reaction, user) {
+        let emoji = reaction.emoji.name;
+
+        return emoji == TICK_EMOJI || emoji == CROSS_EMOJI;
     }
 }
 
