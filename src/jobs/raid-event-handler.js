@@ -48,8 +48,34 @@ class RaidEventHandler extends Job {
                        }
 
                        if (emoji == TICK_EMOJI) {
+                           //check if they have already signed
+                           if (message.signUps.indexOf(user.id) != -1) {
+                               return;
+                           }
+
+                           //check if they unsigned, if so remove from unsigned list
+                           let unsignKey = message.unsigns.indexOf(user.id);
+
+                           if (unsignKey > -1) {
+                               message.unsigns.splice(unsignKey, 1);
+                           }
+
+                           message.signUps.push(user.id);
                            this.handleSign(user);
                        } else if (emoji == CROSS_EMOJI) {
+                           //check if they have already unsigned
+                           if (message.unsigns.indexOf(user.id) != -1) {
+                               return;
+                           }
+
+                           //check if they signed, if so remove from signed list
+                           let signKey = message.signUps.indexOf(user.id);
+
+                           if (signKey > -1) {
+                               message.signUps.splice(signKey, 1);
+                           }
+
+                           message.unsigns.push(user.id);
                            this.handleUnsign(user);
                        }
                    });
