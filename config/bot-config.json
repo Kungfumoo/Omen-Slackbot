@@ -29,6 +29,7 @@
             "iconUrl": "https://cdn.discordapp.com/icons/230429825905459200/54ffbf210635014a6a0f7c5d0212fc55.png?size=128",
             "description": "Please sign up to the raid by reacting with a tick or cross. If you need to leave a note then notify officers on discord."
         },
+        "eventDays": [0, 1, 3],
         "channel": "568729057357725696"
     }
 }

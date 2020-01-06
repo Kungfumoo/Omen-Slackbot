@@ -1,6 +1,7 @@
 'use strict';
 
 const { RichEmbed } = require('discord.js');
+const moment = require("moment");
 const Job = require("./job.js");
 const TICK_EMOJI = '✅';
 const CROSS_EMOJI = '❌';
@@ -18,11 +19,7 @@ class RaidEventHandler extends Job {
         let channel = this.discord.channels.get(this.config.channel);
 
         //Publish new events
-        const embed = this._createEventRichEmbed(new Date());
-            
-        channel.send(embed)
-               .then(this._handleEventMessage.bind(this))
-               .catch(console.error);
+        this._publishEvent(channel);
 
         this.processed = true;
     }
@@ -33,6 +30,26 @@ class RaidEventHandler extends Job {
 
     handleUnsign(user) {
         console.log("Unsigned " + user.username);
+    }
+
+    //Recursive utilizing the promise to ensure they are posted in order and serialy
+    _publishEvent(channel, eventIndex = 0) {
+        let date = this.config.eventDays[eventIndex];
+
+        if (!date) {
+            return;
+        }
+
+        date = new Date(); //TODO: use moment to work out event date
+
+        const embed = this._createEventRichEmbed(new Date());
+
+        channel.send(embed)
+               .then((message) => {
+                   this._handleEventMessage(message);
+                   this._publishEvent(channel, eventIndex + 1);
+               })
+               .catch(console.error);
     }
 
     _createEventRichEmbed(date) {
