@@ -36,13 +36,14 @@ class RaidEventHandler extends Job {
     _publishEvent(channel, eventIndex = 0) {
         let date = this.config.eventDays[eventIndex];
 
-        if (!date) {
+        if (typeof date == "undefined") {
             return;
         }
 
-        date = new Date(); //TODO: use moment to work out event date
+        let today = moment();
+        today.add((7 - today.day()) + date, 'days');
 
-        const embed = this._createEventRichEmbed(new Date());
+        const embed = this._createEventRichEmbed(today);
 
         channel.send(embed)
                .then((message) => {
@@ -59,10 +60,7 @@ class RaidEventHandler extends Job {
             .setAuthor("Emerald Omen", eventMeta.iconUrl)
             .setTitle(eventMeta.title)
             .setColor(0xFF0000)
-            .addField("Date", date.toLocaleDateString(
-                "en-GB",
-                { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }
-            ))
+            .addField("Date", date.format("dddd, MMMM Do YYYY"))
             .setFooter(eventMeta.description);
     }
 
