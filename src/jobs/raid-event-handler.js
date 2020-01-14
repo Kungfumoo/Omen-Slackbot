@@ -5,6 +5,7 @@ const moment = require("moment");
 const Job = require("./job.js");
 const TICK_EMOJI = '✅';
 const CROSS_EMOJI = '❌';
+const COLLECTOR_LISTEN_TIME = 604800;
 
 class RaidEventHandler extends Job {
     onInterval() {
@@ -78,7 +79,7 @@ class RaidEventHandler extends Job {
         //set up collector for raider signs
         let collector = message.createReactionCollector(
             this._reactionFilter, //filter function for reactions (don't want non raiders)
-            { time: 15000 }
+            { time: COLLECTOR_LISTEN_TIME }
         );
 
         collector.on('collect', (reaction) => {
