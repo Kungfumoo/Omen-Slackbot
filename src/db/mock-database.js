@@ -22,6 +22,14 @@ class MockDatabase extends Database
         });
     }
 
+    addSignUp(userId) {
+
+    }
+
+    removeSignUp(userId) {
+
+    }
+
     removeUser(userId) {
         return new Promise((resolve, reject) => {
             resolve();

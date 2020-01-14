@@ -1,7 +1,6 @@
 CREATE TABLE discordUsers (
     id VARCHAR(32) PRIMARY KEY,
-    discordName VARCHAR(255),
-    websiteName VARCHAR(255),
+    name VARCHAR(255),
     recruit TINYINT(1) DEFAULT 0
 );
 
@@ -13,6 +12,7 @@ CREATE TABLE missingDonations (
 
 CREATE TABLE signs(
     signDate DATE,
-    player VARCHAR(255),
-    PRIMARY KEY(signDate, player)
+    playerId VARCHAR(32),
+    attending TINYINT DEFAULT 0,
+    PRIMARY KEY(signDate, playerId)
 );

@@ -14,8 +14,8 @@ class Database {
             let users = [];
 
             this.connection.query(
-                "SELECT u.id FROM discordUsers AS u WHERE u.websiteName NOT IN " +
-                "(SELECT s.player FROM signs AS s)",
+                "SELECT u.id FROM discordUsers AS u WHERE u.id NOT IN " +
+                "(SELECT s.playerId FROM signs AS s)",
                 (error, results, fields) => {
                     results.forEach((result) => {
                         users.push(result.id);
@@ -33,7 +33,7 @@ class Database {
 
             this.connection.query(
                 "SELECT u.id, s.missing FROM discordUsers AS u " +
-                "INNER JOIN missingDonations AS s ON u.websiteName = s.name " +
+                "INNER JOIN missingDonations AS s ON u.name = s.name " +
                 "WHERE u.recruit = 0",
                 (error, results, fields) => {
                     if (results.length == 0) {
@@ -49,6 +49,16 @@ class Database {
                 }
             );
         });
+    }
+
+    addSignUp(userId) {
+        return new Promise((resolve, reject) => {
+            //TODO: Check existing records, if no sign up then insert new sign up, if it exists then change attending to 1
+        });
+    }
+
+    removeSignUp(userId) {
+
     }
 
     removeUser(userId) {
