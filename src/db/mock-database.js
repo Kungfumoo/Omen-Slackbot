@@ -22,11 +22,11 @@ class MockDatabase extends Database
         });
     }
 
-    addSignUp(userId) {
+    addSignUp(userId, eventDate) {
 
     }
 
-    addUnSign(userId) {
+    addUnSign(userId, eventDate) {
 
     }
 

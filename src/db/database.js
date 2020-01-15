@@ -1,5 +1,7 @@
 'use strict';
 
+const moment = require("moment");
+
 class Database {
     constructor(connection) {
         this.connection = connection;
@@ -51,12 +53,14 @@ class Database {
         });
     }
 
-    addSignUp(userId) {
+    addSignUp(userId, eventDate) {
+        eventDate = moment(eventDate).format("Y-M-D");
+
         return new Promise((resolve, reject) => {
             //Check existing records, if no sign up then insert new sign up, if it exists then change attending to 1
             let query = this.connection.format(
-                "SELECT COUNT(*) as count FROM signs WHERE playerId = ?",
-                [userId]
+                "SELECT COUNT(*) as count FROM signs WHERE playerId = ? AND signDate = ?",
+                [userId, eventDate]
             );
 
             this.connection.query(
@@ -67,8 +71,8 @@ class Database {
                     if (count) { //update record
                         this.connection.query(
                             this.connection.format(
-                                "UPDATE signs SET attending = 1 WHERE playerId = ?",
-                                [userId]
+                                "UPDATE signs SET attending = 1 WHERE playerId = ? AND signDate = ?",
+                                [userId, eventDate]
                             )
                         );
 
@@ -79,8 +83,8 @@ class Database {
                     //insert record
                     this.connection.query(
                         this.connection.format(
-                            "INSERT INTO signs VALUES (CURDATE(), ?, 1)",
-                            [userId]
+                            "INSERT INTO signs VALUES (?, ?, 1)",
+                            [eventDate, userId]
                         )
                     );
 
@@ -90,12 +94,14 @@ class Database {
         });
     }
 
-    addUnSign(userId) {
+    addUnSign(userId, eventDate) {
+        eventDate = moment(eventDate).format("Y-M-D");
+
         return new Promise((resolve, reject) => {
             //Check existing records, if no sign up then insert new sign up, if it exists then change attending to 0
             let query = this.connection.format(
-                "SELECT COUNT(*) as count FROM signs WHERE playerId = ?",
-                [userId]
+                "SELECT COUNT(*) as count FROM signs WHERE playerId = ? AND signDate = ?",
+                [userId, eventDate]
             );
 
             this.connection.query(
@@ -106,8 +112,8 @@ class Database {
                     if (count) { //update record
                         this.connection.query(
                             this.connection.format(
-                                "UPDATE signs SET attending = 0 WHERE playerId = ?",
-                                [userId]
+                                "UPDATE signs SET attending = 0 WHERE playerId = ? AND signDate = ?",
+                                [userId, eventDate]
                             )
                         );
 
@@ -118,8 +124,8 @@ class Database {
                     //insert record
                     this.connection.query(
                         this.connection.format(
-                            "INSERT INTO signs VALUES (CURDATE(), ?, 0)",
-                            [userId]
+                            "INSERT INTO signs VALUES (?, ?, 0)",
+                            [eventDate, userId]
                         )
                     );
 

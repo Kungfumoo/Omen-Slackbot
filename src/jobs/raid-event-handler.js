@@ -25,12 +25,22 @@ class RaidEventHandler extends Job {
         this.processed = true;
     }
 
-    handleSign(user) {
-        console.log("Signed " + user.username);
+    handleSign(user, eventDate) {
+        let promise = this.database.addSignUp(user.id, eventDate);
+
+        promise.then(() => {
+            //TODO: any post sign up work
+            console.log("Signed " + user.username);
+        });
     }
 
-    handleUnsign(user) {
-        console.log("Unsigned " + user.username);
+    handleUnsign(user, eventDate) {
+        let promise = this.database.addUnSign(user.id, eventDate);
+
+        promise.then(() => {
+            //TODO: any post unsign work
+            console.log("Unsigned " + user.username);
+        });
     }
 
     //Recursive utilizing the promise to ensure they are posted in order and serialy
@@ -48,7 +58,7 @@ class RaidEventHandler extends Job {
 
         channel.send(embed)
                .then((message) => {
-                   this._handleEventMessage(message);
+                   this._handleEventMessage(message, today);
                    this._publishEvent(channel, eventIndex + 1);
                })
                .catch(console.error);
@@ -65,7 +75,7 @@ class RaidEventHandler extends Job {
             .setFooter(eventMeta.description);
     }
 
-    _handleEventMessage(message) {
+    _handleEventMessage(message, eventDate) {
         //Bot does initial reactions so people can just click
         message.react(TICK_EMOJI)
                .then(() => {
@@ -105,7 +115,7 @@ class RaidEventHandler extends Job {
                 }
 
                 message.signUps.push(user.id);
-                this.handleSign(user);
+                this.handleSign(user, eventDate);
             } else if (emoji == CROSS_EMOJI) {
                 //check if they have already unsigned
                 if (message.unsigns.indexOf(user.id) != -1) {
@@ -120,7 +130,7 @@ class RaidEventHandler extends Job {
                 }
 
                 message.unsigns.push(user.id);
-                this.handleUnsign(user);
+                this.handleUnsign(user, eventDate);
             }
         });
 
