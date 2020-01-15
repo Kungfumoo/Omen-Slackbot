@@ -26,7 +26,7 @@ class MockDatabase extends Database
 
     }
 
-    removeSignUp(userId) {
+    addUnSign(userId) {
 
     }
 
