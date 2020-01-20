@@ -23,14 +23,24 @@ class MockDatabase extends Database
     }
 
     addSignUp(userId, eventDate) {
-
+        return new Promise((resolve, reject) => {
+            resolve();
+        });
     }
 
     addUnSign(userId, eventDate) {
-
+        return new Promise((resolve, reject) => {
+            resolve();
+        });
     }
 
     removeUser(userId) {
+        return new Promise((resolve, reject) => {
+            resolve();
+        });
+    }
+
+    addUser(userId, name) {
         return new Promise((resolve, reject) => {
             resolve();
         });

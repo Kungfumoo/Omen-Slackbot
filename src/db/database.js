@@ -150,6 +150,22 @@ class Database {
             );
         });
     }
+
+    addUser(userId, name) {
+        return new Promise((resolve, reject) => {
+            let query = this.connection.format(
+                "INSERT INTO discordUsers VALUES (?, ?, 0)",
+                [userId, name]
+            );
+
+            this.connection.query(
+                query,
+                (error, results, fields) => {
+                    resolve();
+                }
+            );
+        });
+    }
 }
 
 module.exports = Database;
