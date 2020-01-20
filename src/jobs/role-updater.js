@@ -44,6 +44,10 @@ class RoleUpdater extends Job {
             });
         });
     }
+
+    syncRoles() {
+        //TODO: grab current id list, get all raiders from discord, go through discord list, add if not in database, remove if not in discord list
+    }
 }
 
 module.exports = RoleUpdater;
