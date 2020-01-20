@@ -9,7 +9,21 @@ const COLLECTOR_LISTEN_TIME = 604800;
 
 class RaidEventHandler extends Job {
     onInterval() {
-        //TODO: publish new events on wednesday
+        let date = new Date();
+        let dow = date.getDay();
+        let hour = date.getHours();
+
+        //reset process counter
+        if (this.processed && this.processed.getDay() != dow) {
+            this.processed = false;
+        }
+
+        if (this.config.interval.weekdays.indexOf(dow) == -1 ||
+            hour != this.config.interval.hour) {
+            return;
+        }
+
+        this.processJob();
     }
 
     processJob() {
@@ -22,7 +36,7 @@ class RaidEventHandler extends Job {
         //Publish new events
         this._publishEvent(channel);
 
-        this.processed = true;
+        this.processed = new Date();
     }
 
     handleSign(user, eventDate) {
