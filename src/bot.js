@@ -12,7 +12,8 @@ const database = new db.Database(mysql.createConnection(require('../config/mysql
 
 const jobsToRun = [
     new jobs.SignUpChaser(config.signups, client, database),
-    new jobs.DonateChaser(config.donations, client, database)
+    new jobs.DonateChaser(config.donations, client, database),
+    new jobs.RaidEventHandler(config.raidEvents, client, database)
 ];
 
 client.on('ready', () => {
