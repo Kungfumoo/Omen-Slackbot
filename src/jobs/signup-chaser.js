@@ -1,6 +1,7 @@
 'use strict';
 
-var Job = require("./job.js");
+const moment = require("moment");
+const Job = require("./job.js");
 
 class SignUpChaser extends Job {
     onInterval() {
@@ -26,10 +27,12 @@ class SignUpChaser extends Job {
             return;
         }
 
-        let promise = this.database.fetchUnSignedRaiders();
+        let eventDate = moment().add(1, 'days');
+        let promise = this.database.fetchUnSignedRaiders(eventDate);
 
         promise.then((unsigned) => {
             if (unsigned.length == 0) {
+                this.processed = new Date();
                 return;
             }
 

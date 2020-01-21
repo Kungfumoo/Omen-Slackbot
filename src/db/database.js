@@ -28,17 +28,25 @@ class Database {
         });
     }
 
-    fetchUnSignedRaiders() {
+    fetchUnSignedRaiders(eventDate) {
+        eventDate = moment(eventDate).format("Y-M-D");
+
         return new Promise((resolve, reject) => {
             let users = [];
+            let query = this.connection.format(
+                "SELECT u.id FROM discordUsers AS u WHERE u.id NOT IN " +
+                "(SELECT s.playerId FROM signs AS s WHERE s.signDate = ?)",
+                [eventDate]
+            );
 
             this.connection.query(
-                "SELECT u.id FROM discordUsers AS u WHERE u.id NOT IN " +
-                "(SELECT s.playerId FROM signs AS s)",
+                query,
                 (error, results, fields) => {
-                    results.forEach((result) => {
-                        users.push(result.id);
-                    });
+                    if (results) {
+                        results.forEach((result) => {
+                            users.push(result.id);
+                        });
+                    }
 
                     resolve(users);
                 }

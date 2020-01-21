@@ -13,7 +13,7 @@ class MockDatabase extends Database
         });
     }
 
-    fetchUnSignedRaiders() {
+    fetchUnSignedRaiders(eventDate) {
         return new Promise((resolve, reject) => {
             resolve([
                 "230604196490117120", //kfm
