@@ -32,24 +32,10 @@ client.on('ready', () => {
 
 client.on('message', msg => {
     if (msg.author.id == config.main.admin) {
-        if (msg.content === '!listRaiders') {
-            const guild = client.guilds.get(config.main.guild);
+        if (msg.content === '!syncRaiders') {
+            let job = new jobs.RoleUpdater(config.main, client, database);
 
-            if (!(guild && guild.available)) {
-                return;
-            }
-
-            let membersWithRole = guild.roles.get(config.main.raiderRole).members; //raider
-
-            membersWithRole.array().forEach((member) => {
-                let name = member.nickname;
-
-                if (!name) {
-                    name = member.displayName;
-                }
-
-                msg.reply(member.id + " : " + name);
-            });
+            job.syncRoles();
         } else {
             let found = msg.content.match(/\!comment[\s]*(.*)/);
 

@@ -11,6 +11,23 @@ class Database {
         }
     }
 
+    fetchAllUsers() {
+        return new Promise((resolve, reject) => {
+            let users = [];
+
+            this.connection.query(
+                "SELECT u.id FROM discordUsers AS u",
+                (error, results, fields) => {
+                    results.forEach((result) => {
+                        users.push(result.id);
+                    });
+
+                    resolve(users);
+                }
+            );
+        });
+    }
+
     fetchUnSignedRaiders() {
         return new Promise((resolve, reject) => {
             let users = [];
