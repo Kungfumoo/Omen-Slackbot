@@ -5,7 +5,7 @@ const moment = require("moment");
 const Job = require("./job.js");
 const TICK_EMOJI = '✅';
 const CROSS_EMOJI = '❌';
-const COLLECTOR_LISTEN_TIME = 604800;
+const COLLECTOR_LISTEN_TIME = 6.048e+8;
 
 class RaidEventHandler extends Job {
     onInterval() {
