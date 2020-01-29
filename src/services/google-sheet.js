@@ -16,37 +16,22 @@ class GoogleSheet {
         sheet.getRows({
             limit: 35
         }, function (err, rows) {
-            let signDate = eventDate.format("ddd DD MMM");
-
             //search rows
             for (let i = 0; i < rows.length; i++) {
                 if (rows[i].id == playerID) { //found ID in rows
-                    let keyArray = Object.keys(rows[i]);
+                    let key = eventDate.format("dddDDMMM").toLowerCase();
 
-                    for (let x = 0; x < (Object.keys(rows[i])).length; x++) {
-                        if (keyArray[x] == signDate) { //find date in row
-                            foundX = x; //the for loop keeps iterating as getCells is async.
-
-                            sheet.getCells({
-                                'min-row': (i + 2), //the indexes are strange
-                                'max-row': (i + 2),
-                                'return-empty': true
-                            }, function (err, cells) {
-                                let cell = cells[foundX - 3]; //x = 9 but col num is 6? and recorded as 7?
-
-                                if (!cell.value.toLowerCase() == 'c') {
-                                    cell.value = signValue;
-                                    cell.save(function (err) {
-                                        //TODO: report error?
-                                    });
-                                }
-
-                            });
-
-                            return;
-                        }
+                    if (!rows[key]) {
+                        break; //TODO notify me? no date found to apply
                     }
 
+                    if (signValue == 1) {
+                        rows[key] = "A";
+                    } else {
+                        rows[key] = "N";
+                    }
+
+                    rows.save();
                     break;
                 }
             }
