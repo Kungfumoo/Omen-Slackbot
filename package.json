@@ -1,12 +1,13 @@
 {
     "name": "Slackbot",
-    "version": "0.0.1",
+    "version": "2.1.0",
     "description": "Bot to remind slacking raiders",
     "main": "src/bot.js",
     "author": "Kungfumoo (Aaron Winter)",
     "dependencies": {
         "discord.js": "^11.4.2",
         "mysql": "^2.16.0",
-        "moment": "^2.24.0"
+        "moment": "^2.24.0",
+        "google-spreadsheet": "2.0.8"
     }
 }

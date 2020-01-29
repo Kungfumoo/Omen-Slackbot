@@ -1,11 +1,13 @@
 'use strict';
 
 const moment = require("moment");
+const GoogleSpreadsheet = require('google-spreadsheet');
 
 //Taken from https://github.com/bleasdal3/SLM-Sign-Bot, Thanks Nick!
 class GoogleSheet {
-    constructor(config) {
-        //TODO: set up this.sheet
+    constructor(sheetId, auth) {
+        this.sheet = new GoogleSpreadsheet(sheetId);
+        this.sheet.useServiceAccountAuth(auth);
     }
 
     UpdateSignup(eventDate, playerID, signValue) {
