@@ -66,7 +66,7 @@ class GoogleSheet {
         });
     }
 
-    RemoveRaider(id, name) {
+    RemoveRaider(id) {
         if (!this.ready) {
             console.log("Spreadsheet not ready!")
             return;
