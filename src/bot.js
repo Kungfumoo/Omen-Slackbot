@@ -4,16 +4,26 @@ const auth = require('../auth.json');
 const config = require('../config/bot-config.json');
 const jobs = require('./jobs');
 const db = require('./db');
+const GoogleSheet = require('./services/google-sheet.js');
 
 const client = new Discord.Client();
 const CHECK_PERIOD = 60000;
 //const database = new db.MockDatabase(null);
 const database = new db.Database(mysql.createConnection(require('../config/mysql-config.json')));
-
+const sheetService = new GoogleSheet(
+    config.googleSheet.sheetId,
+    require('../google-auth.json')
+);
+const roleUpdater = new jobs.RoleUpdater(
+    config.main,
+    client,
+    database,
+    sheetService
+);
 const jobsToRun = [
     new jobs.SignUpChaser(config.signups, client, database),
     new jobs.DonateChaser(config.donations, client, database),
-    new jobs.RaidEventHandler(config.raidEvents, client, database)
+    new jobs.RaidEventHandler(config.raidEvents, client, database, sheetService)
 ];
 
 client.on('ready', () => {
@@ -34,9 +44,7 @@ client.on('ready', () => {
 client.on('message', msg => {
     if (msg.author.id == config.main.admin) {
         if (msg.content === '!syncRaiders') {
-            let job = new jobs.RoleUpdater(config.main, client, database);
-
-            job.syncRoles();
+            roleUpdater.syncRoles();
         } else {
             let found = msg.content.match(/\!comment[\s]*(.*)/);
 
@@ -55,9 +63,9 @@ client.on('guildMemberUpdate', (oldMember, newMember) => {
     let newRoles = newMember.roles;
 
     if (oldRoles.has(config.main.raiderRole) && !newRoles.has(config.main.raiderRole)) { //demotion!
-        (new jobs.RoleUpdater(config.main, client, database)).handleRoleRemoval(newMember);
+        roleUpdater.handleRoleRemoval(newMember);
     } else if (!oldRoles.has(config.main.raiderRole) && newRoles.has(config.main.raiderRole)) { //promotion!
-        (new jobs.RoleUpdater(config.main, client, database)).handleRoleAdd(newMember);
+        roleUpdater.handleRoleAdd(newMember);
     }
 });
 
