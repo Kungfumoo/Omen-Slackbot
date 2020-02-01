@@ -60,8 +60,14 @@ class GoogleSheet {
             }
 
             this.sheet.addRow(WORKSHEET_ID, {
-                id: id,
-                name: name
+                "name": name,
+                "discordid": id
+            }, (err) => {
+                if (!err) {
+                    return;
+                }
+
+                console.log("Add Row Error: " + err);
             });
         });
     }
@@ -104,7 +110,7 @@ class GoogleSheet {
                 for (let i = 0; i < rows.length; i++) {
                     let row = rows[i];
 
-                    if (row.id == playerID) { //found ID in rows
+                    if (row.discordid == playerID) { //found ID in rows
                         resolve(row);
                         return;
                     }
