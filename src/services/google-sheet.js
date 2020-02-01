@@ -2,6 +2,8 @@
 
 const moment = require("moment");
 const GoogleSpreadsheet = require('google-spreadsheet');
+const { series, timesSeries } = require('async');
+
 const WORKSHEET_ID = 1;
 
 //Taken from https://github.com/bleasdal3/SLM-Sign-Bot, Thanks Nick!
@@ -48,7 +50,7 @@ class GoogleSheet {
         });
     }
 
-    AddRaider(id, name) {
+    AddRaider(id, name, cb) {
         if (!this.ready) {
             console.log("Spreadsheet not ready!")
             return;
@@ -63,16 +65,19 @@ class GoogleSheet {
                 "name": name,
                 "discordid": id
             }, (err) => {
-                if (!err) {
+                if (err) {
+                    console.log("Add Row Error: " + err);
                     return;
                 }
 
-                console.log("Add Row Error: " + err);
+                if (cb) {
+                    cb();
+                }
             });
         });
     }
 
-    RemoveRaider(id) {
+    RemoveRaider(id, cb) {
         if (!this.ready) {
             console.log("Spreadsheet not ready!")
             return;
@@ -83,7 +88,11 @@ class GoogleSheet {
                 return; //already removed
             }
 
-            row.del();
+            row.del(() => {
+                if (cb) {
+                    cb();
+                }
+            });
         });
     }
 
@@ -92,6 +101,34 @@ class GoogleSheet {
             console.log("Spreadsheet not ready!")
             return;
         }
+    }
+
+    BulkUpdateUsers(addedUsers, removedUsers) {
+        series([
+            () => {
+                timesSeries(
+                    addedUsers.length,
+                    (n, next) => {
+                        this.AddRaider(
+                            addedUsers[n].id,
+                            addedUsers[n].name,
+                            next()
+                        );
+                    }
+                )
+            },
+            () => {
+                timesSeries(
+                    removedUsers.length,
+                    (n, next) => {
+                        this.RemoveRaider(
+                            removedUsers[n].id,
+                            next()
+                        );
+                    }
+                )
+            }
+        ]);
     }
 
     _findRaiderRow(playerID) {

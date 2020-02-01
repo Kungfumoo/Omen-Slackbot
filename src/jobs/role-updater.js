@@ -70,6 +70,8 @@ class RoleUpdater extends Job {
             }
 
             let membersWithRole = guild.roles.get(this.config.raiderRole).members; //raider
+            let addedUsers = [];
+            let removedUsers = [];
 
             membersWithRole.array().forEach((member) => {
                 let name = member.nickname;
@@ -83,7 +85,10 @@ class RoleUpdater extends Job {
 
                 if (index == -1) { //then it's not in the database, so add them
                     this.database.addUser(id, name);
-                    this.sheet.AddRaider(id, name);
+                    addedUsers.push({
+                        id: id,
+                        name: name
+                    });
                 } else {
                     dbUsers.splice(index, 1); //remove the user as he exists
                 }
@@ -92,8 +97,13 @@ class RoleUpdater extends Job {
             //go through remianing dbUsers and remove them from the database.
             dbUsers.forEach((userId) => {
                 this.database.removeUser(userId);
-                this.sheet.RemoveRaider(userId);
+                removedUsers.push({
+                    id: id
+                });
             });
+
+            //update google sheet
+            this.sheet.BulkUpdateUsers(addedUsers, removedUsers);
 
             //notify admin
             let discordPromise = this.discord.fetchUser(this.config.admin);
