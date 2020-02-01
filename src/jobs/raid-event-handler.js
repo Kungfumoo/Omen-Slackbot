@@ -49,9 +49,8 @@ class RaidEventHandler extends Job {
         let promise = this.database.addSignUp(user.id, eventDate);
 
         promise.then(() => {
-            //TODO: any post sign up work
+            //any post sign up work
             this.sheet.UpdateSignup(eventDate, user.id, 1);
-            console.log("Signed " + user.username);
         });
     }
 
@@ -59,8 +58,8 @@ class RaidEventHandler extends Job {
         let promise = this.database.addUnSign(user.id, eventDate);
 
         promise.then(() => {
-            //TODO: any post unsign work
-            console.log("Unsigned " + user.username);
+            //any post unsign work
+            this.sheet.UpdateSignup(eventDate, user.id, 0);
         });
     }
 
