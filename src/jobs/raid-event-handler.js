@@ -8,6 +8,12 @@ const CROSS_EMOJI = '❌';
 const COLLECTOR_LISTEN_TIME = 6.048e+8;
 
 class RaidEventHandler extends Job {
+    constructor(config, discord, database, googleSheet) {
+        super(config, discord, database);
+
+        this.sheet = googleSheet;
+    }
+
     onInterval() {
         let date = new Date();
         let dow = date.getDay();
@@ -44,6 +50,7 @@ class RaidEventHandler extends Job {
 
         promise.then(() => {
             //TODO: any post sign up work
+            this.sheet.UpdateSignup(eventDate, user.id, 1);
             console.log("Signed " + user.username);
         });
     }

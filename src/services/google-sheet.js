@@ -7,51 +7,75 @@ const GoogleSpreadsheet = require('google-spreadsheet');
 class GoogleSheet {
     constructor(sheetId, auth) {
         this.sheet = new GoogleSpreadsheet(sheetId);
-        this.sheet.useServiceAccountAuth(auth);
+        this.ready = false;
+        this.sheet.useServiceAccountAuth(auth, () => {
+            this.ready = true;
+        });
     }
 
     UpdateSignup(eventDate, playerID, signValue) {
+        if (!this.ready) {
+            console.log("Spreadsheet not ready!")
+            return;
+        }
+
         const sheet = this.sheet;
         eventDate = moment(eventDate);
 
         //get rows
-        sheet.getRows({
+        sheet.getRows(1, {
             limit: 35
         }, function (err, rows) {
+            if (err) {
+                console.log(err);
+            }
+
             //search rows
             for (let i = 0; i < rows.length; i++) {
-                if (rows[i].id == playerID) { //found ID in rows
+                let row = rows[i];
+                if (row.id == playerID) { //found ID in rows
                     let key = eventDate.format("dddDDMMM").toLowerCase();
 
-                    if (!rows[key]) {
-                        break; //TODO notify me? no date found to apply
+                    if (typeof row[key] == "undefined") {
+                        console.log(key + " cound not be found in the sheet headers");
+                        return;
                     }
 
                     if (signValue == 1) {
-                        rows[key] = "A";
+                        row[key] = "A";
                     } else {
-                        rows[key] = "N";
+                        row[key] = "N";
                     }
 
-                    rows.save();
-                    break;
+                    row.save();
+                    return;
                 }
             }
 
             //TODO: if it gets here then nothing was found, need slackbot to notify me
+            console.log(playerID + " could not be found in the spreadsheet!");
         });
     }
 
     AddRaider() {
-
+        if (!this.ready) {
+            console.log("Spreadsheet not ready!")
+            return;
+        }
     }
 
     RemoveRaider() {
-
+        if (!this.ready) {
+            console.log("Spreadsheet not ready!")
+            return;
+        }
     }
 
     AddEventColumn() {
-
+        if (!this.ready) {
+            console.log("Spreadsheet not ready!")
+            return;
+        }
     }
 }
 
