@@ -6,6 +6,7 @@ const Job = require("./job.js");
 const TICK_EMOJI = '✅';
 const CROSS_EMOJI = '❌';
 const COLLECTOR_LISTEN_TIME = 6.048e+8;
+const NOTIFY_DELAY = 60000;
 
 class RaidEventHandler extends Job {
     constructor(config, discord, database, googleSheet) {
@@ -67,7 +68,8 @@ class RaidEventHandler extends Job {
     _publishEvent(channel, eventIndex = 0) {
         let date = this.config.eventDays[eventIndex];
 
-        if (typeof date == "undefined") {
+        if (typeof date == "undefined") { //no more events to publish
+            this._notifyEventsReady();
             return;
         }
 
@@ -164,6 +166,14 @@ class RaidEventHandler extends Job {
         let emoji = reaction.emoji.name;
 
         return emoji == TICK_EMOJI || emoji == CROSS_EMOJI;
+    }
+
+    _notifyEventsReady() {
+        setTimeout(() => {
+            let channel = this.discord.channels.get(this.config.notifyChannel);
+
+            channel.send("New raids for this week have been posted, go sign/unsign to them in the #events channel");
+        }, NOTIFY_DELAY);
     }
 }
 

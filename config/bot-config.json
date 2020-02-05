@@ -30,9 +30,10 @@
             "description": "Please sign up to the raid by reacting with a tick or cross. If you need to leave a note then notify officers on discord."
         },
         "eventDays": [0, 1, 3],
-        "channel": "568729057357725696"
+        "channel": "568729057357725696",
+        "notifyChannel": "568729057357725696"
     },
     "googleSheet": {
-        "sheetId": "1DTiDs7wHMUb6eZnmXMjo-IIzXBS6Vhyv6V6yFi2bNj0"
+        "sheetId": "1J2Hr-fdawpX48C5eOKY2TmyL83_3yBEltaIBQFvGXxU"
     }
 }
