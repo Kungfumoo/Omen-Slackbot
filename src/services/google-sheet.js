@@ -2,7 +2,7 @@
 
 const moment = require("moment");
 const GoogleSpreadsheet = require('google-spreadsheet');
-const { series, timesSeries } = require('async');
+const { series, timesSeries, queue } = require('async');
 
 const WORKSHEET_ID = 1;
 
@@ -14,6 +14,11 @@ class GoogleSheet {
         this.sheet.useServiceAccountAuth(auth, () => {
             this.ready = true;
         });
+        this.updateQueue = queue(
+            (task, callback) => {
+                task(callback);
+            }
+        )
     }
 
     UpdateSignup(eventDate, playerID, signValue) {
@@ -24,29 +29,33 @@ class GoogleSheet {
 
         eventDate = moment(eventDate);
 
-        //search rows
-        this._findRaiderRow(playerID).then((row) => {
-            if (!row) {
-                //TODO: nothing was found, need slackbot to notify me
-                console.log(playerID + " could not be found in the spreadsheet!");
+        this.updateQueue.push(function(step) {
+            //search rows
+            this._findRaiderRow(playerID).then((row) => {
+                if (!row) {
+                    //TODO: nothing was found, need slackbot to notify me
+                    console.log(playerID + " could not be found in the spreadsheet!");
+                    step();
+                    return;
+                }
+
+                let key = eventDate.format("dddDDMMM").toLowerCase();
+
+                if (typeof row[key] == "undefined") {
+                    console.log(key + " cound not be found in the sheet headers");
+                    step();
+                    return;
+                }
+
+                if (signValue == 1) {
+                    row[key] = "A";
+                } else {
+                    row[key] = "N";
+                }
+
+                row.save(step);
                 return;
-            }
-
-            let key = eventDate.format("dddDDMMM").toLowerCase();
-
-            if (typeof row[key] == "undefined") {
-                console.log(key + " cound not be found in the sheet headers");
-                return;
-            }
-
-            if (signValue == 1) {
-                row[key] = "A";
-            } else {
-                row[key] = "N";
-            }
-
-            row.save();
-            return;
+            });
         });
     }
 
@@ -101,6 +110,8 @@ class GoogleSheet {
             console.log("Spreadsheet not ready!")
             return;
         }
+
+        //TODO: currently being handled by a spreadsheet script.
     }
 
     BulkUpdateUsers(addedUsers, removedUsers) {
