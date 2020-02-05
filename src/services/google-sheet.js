@@ -29,7 +29,7 @@ class GoogleSheet {
 
         eventDate = moment(eventDate);
 
-        this.updateQueue.push(function(step) {
+        this.updateQueue.push((step) => {
             //search rows
             this._findRaiderRow(playerID).then((row) => {
                 if (!row) {
