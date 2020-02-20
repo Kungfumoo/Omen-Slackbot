@@ -162,7 +162,6 @@ class GoogleSheet {
                     let row = rows[i];
 
                     if (typeof row[key] == "undefined") {
-                        console.log(key + " cound not be found in the sheet headers");
                         resolve([]);
                         return;
                     }

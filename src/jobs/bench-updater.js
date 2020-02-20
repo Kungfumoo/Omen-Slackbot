@@ -3,6 +3,12 @@
 const Job = require("./job.js");
 
 class BenchUpdater extends Job {
+    constructor(config, discord, database, googleSheet) {
+        super(config, discord, database);
+
+        this.sheet = googleSheet;
+    }
+
     onInterval() {
         /*let date = new Date();
         let dow = date.getDay();
@@ -26,7 +32,29 @@ class BenchUpdater extends Job {
             return;
         }
 
-        //TODO: Scan google sheet and updated benched people table
+        let eventDates = this._fetchEventDates();
+
+        eventDates.forEach((eventDate) => {
+            let promise = this.sheet.findBenchedUsers(eventDate);
+
+            promise.then((benched) => {
+                //TODO: update db
+            });
+        });
+    }
+
+    _fetchEventDates() {
+        let weekdays = this.config.eventDays;
+        let eventDates = [];
+
+        weekdays.forEach((date) => {
+            let today = moment();
+            today.add((7 - today.day()) + date, 'days');
+
+            eventDates.push(today);
+        });
+
+        return eventDates;
     }
 }
 
