@@ -16,3 +16,9 @@ CREATE TABLE signs(
     attending TINYINT DEFAULT 0,
     PRIMARY KEY(signDate, playerId)
 );
+
+CREATE TABLE bench(
+    signDate DATE,
+    player VARCHAR(255),
+    PRIMARY KEY(signDate, player)
+);
