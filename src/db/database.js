@@ -191,6 +191,24 @@ class Database {
             );
         });
     }
+
+    addBenchedUser(name, eventDate) {
+        eventDate = moment(eventDate).format("Y-M-D");
+
+        return new Promise((resolve, reject) => {
+            let query = this.connection.format(
+                "INSERT INTO bench VALUES (?, ?)",
+                [eventDate, name]
+            );
+
+            this.connection.query(
+                query,
+                (error, results, fields) => {
+                    resolve();
+                }
+            );
+        });
+    }
 }
 
 module.exports = Database;

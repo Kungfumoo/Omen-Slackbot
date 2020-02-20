@@ -54,6 +54,12 @@ class MockDatabase extends Database
             resolve();
         });
     }
+
+    addBenchedUser(name, eventDate) {
+        return new Promise((resolve, reject) => {
+            resolve();
+        });
+    }
 }
 
 module.exports = MockDatabase;
