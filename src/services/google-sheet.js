@@ -142,6 +142,41 @@ class GoogleSheet {
         ]);
     }
 
+    findBenchedUsers(eventDate) {
+        let key = eventDate.format("dddDDMMM").toLowerCase();
+
+        return new Promise((resolve) => {
+            let benched = [];
+
+            sheet.getRows(WORKSHEET_ID, {
+                limit: 35
+            }, function (err, rows) {
+                if (err) {
+                    console.log(err);
+                    resolve([]);
+                    return;
+                }
+
+                //search rows
+                for (let i = 0; i < rows.length; i++) {
+                    let row = rows[i];
+
+                    if (typeof row[key] == "undefined") {
+                        console.log(key + " cound not be found in the sheet headers");
+                        resolve([]);
+                        return;
+                    }
+
+                    if (row[key].toUpperCase() == 'S') {
+                        benched.push(row.discordid)
+                    }
+                }
+
+                resolve(benched);
+            });
+        });
+    }
+
     _findRaiderRow(playerID) {
         const sheet = this.sheet;
 
