@@ -143,6 +143,7 @@ class GoogleSheet {
     }
 
     findBenchedUsers(eventDate) {
+        const sheet = this.sheet;
         let key = eventDate.format("dddDDMMM").toLowerCase();
 
         return new Promise((resolve) => {

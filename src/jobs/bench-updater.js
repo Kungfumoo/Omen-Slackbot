@@ -1,5 +1,6 @@
 'use strict';
 
+const moment = require("moment");
 const Job = require("./job.js");
 
 class BenchUpdater extends Job {
@@ -34,16 +35,16 @@ class BenchUpdater extends Job {
 
         let eventDates = this._fetchEventDates();
 
-        eventDates.forEach((eventDate) => {
+        eventDates.forEach(async (eventDate) => {
             let benched = await this.sheet.findBenchedUsers(eventDate);
             let names = await this.database.fetchNamesById(benched); //resolve ids to names
 
             names.forEach((name) => {
                 this.database.addBenchedUser(name, eventDate);
             });
-
-            this.processed = new Date();
         });
+
+        this.processed = new Date();
     }
 
     _fetchEventDates() {

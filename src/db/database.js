@@ -30,6 +30,11 @@ class Database {
 
     fetchNamesById(discordIds) {
         return new Promise((resolve, reject) => {
+            if (!discordIds || discordIds.length == 0) {
+                resolve([]);
+                return;
+            }
+
             let query = this.connection.format(
                 "SELECT u.name FROM discordUsers AS u WHERE u.id IN (?)",
                 [discordIds]
@@ -39,9 +44,13 @@ class Database {
             this.connection.query(
                 query,
                 (error, results, fields) => {
-                    results.forEach((result) => {
-                        users.push(result.name);
-                    });
+                    if (results) {
+                        results.forEach((result) => {
+                            users.push(result.name);
+                        });
+                    } else {
+                        console.log("fetchNamesById failed: " + error);
+                    }
 
                     resolve(users);
                 }
