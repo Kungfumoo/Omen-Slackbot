@@ -11,7 +11,7 @@ class BenchUpdater extends Job {
     }
 
     onInterval() {
-        /*let date = new Date();
+        let date = new Date();
         let dow = date.getDay();
         let hour = date.getHours();
 
@@ -25,7 +25,7 @@ class BenchUpdater extends Job {
             return;
         }
 
-        this.processJob();*/
+        this.processJob();
     }
 
     processJob() {

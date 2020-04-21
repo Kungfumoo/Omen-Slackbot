@@ -37,6 +37,10 @@
         "sheetId": "1J2Hr-fdawpX48C5eOKY2TmyL83_3yBEltaIBQFvGXxU"
     },
     "benchUpdater": {
-        "eventDays": [0, 1, 3]
+        "eventDays": [0, 1, 3],
+        "interval": {
+            "weekdays": [0, 1, 3],
+            "hour": 20
+        }
     }
 }
