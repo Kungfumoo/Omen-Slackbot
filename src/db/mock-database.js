@@ -13,6 +13,15 @@ class MockDatabase extends Database
         });
     }
 
+    fetchNamesById(discordIds) {
+        return new Promise((resolve, reject) => {
+            resolve([
+                "kungfumoo",
+                "tymia"
+            ]);
+        });
+    }
+
     fetchUnSignedRaiders(eventDate) {
         return new Promise((resolve, reject) => {
             resolve([

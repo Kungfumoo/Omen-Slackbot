@@ -28,6 +28,27 @@ class Database {
         });
     }
 
+    fetchNamesById(discordIds) {
+        return new Promise((resolve, reject) => {
+            let query = this.connection.format(
+                "SELECT u.name FROM discordUsers AS u WHERE u.id IN (?)",
+                [discordIds]
+            );
+            let users = [];
+
+            this.connection.query(
+                query,
+                (error, results, fields) => {
+                    results.forEach((result) => {
+                        users.push(result.name);
+                    });
+
+                    resolve(users);
+                }
+            );
+        });
+    }
+
     fetchUnSignedRaiders(eventDate) {
         eventDate = moment(eventDate).format("Y-M-D");
 

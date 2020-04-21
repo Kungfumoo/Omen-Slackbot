@@ -35,11 +35,14 @@ class BenchUpdater extends Job {
         let eventDates = this._fetchEventDates();
 
         eventDates.forEach((eventDate) => {
-            let promise = this.sheet.findBenchedUsers(eventDate);
+            let benched = await this.sheet.findBenchedUsers(eventDate);
+            let names = await this.database.fetchNamesById(benched); //resolve ids to names
 
-            promise.then((benched) => {
-                //TODO: update db
+            names.forEach((name) => {
+                this.database.addBenchedUser(name, eventDate);
             });
+
+            this.processed = new Date();
         });
     }
 
