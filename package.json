@@ -1,6 +1,6 @@
 {
     "name": "Slackbot",
-    "version": "2.1.2",
+    "version": "2.2.0",
     "description": "Bot to remind slacking raiders",
     "main": "src/bot.js",
     "author": "Kungfumoo (Aaron Winter)",
