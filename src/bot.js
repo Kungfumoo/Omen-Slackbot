@@ -23,7 +23,8 @@ const roleUpdater = new jobs.RoleUpdater(
 const jobsToRun = [
     new jobs.SignUpChaser(config.signups, client, database),
     new jobs.DonateChaser(config.donations, client, database),
-    new jobs.RaidEventHandler(config.raidEvents, client, database, sheetService)
+    new jobs.RaidEventHandler(config.raidEvents, client, database, sheetService),
+    new jobs.BenchUpdater(config.benchUpdater, client, database, sheetService)
 ];
 
 client.on('ready', () => {
@@ -31,7 +32,7 @@ client.on('ready', () => {
 
     client.setInterval(() => {
         jobsToRun.forEach((job) => {
-            //job.processJob(); //TODO: onInterval
+            job.onInterval(); //job.processJob();
         });
 
         //keep connection alive, I'm sure you are not supposed to do this lol but oh well
