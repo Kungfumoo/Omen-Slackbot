@@ -33,32 +33,20 @@ class BenchUpdater extends Job {
             return;
         }
 
-        let eventDates = this._fetchEventDates();
+        //find benched people for today
+        let eventDate = moment();
 
-        eventDates.forEach(async (eventDate) => {
-            let benched = await this.sheet.findBenchedUsers(eventDate);
-            let names = await this.database.fetchNamesById(benched); //resolve ids to names
-
-            names.forEach((name) => {
-                this.database.addBenchedUser(name, eventDate);
-            });
-        });
-
+        this.processBenched(eventDate);
         this.processed = new Date();
     }
 
-    _fetchEventDates() {
-        let weekdays = this.config.eventDays;
-        let eventDates = [];
+    async processBenched(eventDate) {
+        let benched = await this.sheet.findBenchedUsers(eventDate);
+        let names = await this.database.fetchNamesById(benched); //resolve ids to names
 
-        weekdays.forEach((date) => {
-            let today = moment();
-            today.add((7 - today.day()) + date, 'days');
-
-            eventDates.push(today);
+        names.forEach((name) => {
+            this.database.addBenchedUser(name, eventDate);
         });
-
-        return eventDates;
     }
 }
 
