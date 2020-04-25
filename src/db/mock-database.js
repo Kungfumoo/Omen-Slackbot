@@ -64,7 +64,7 @@ class MockDatabase extends Database
         });
     }
 
-    addBenchedUser(name, eventDate) {
+    addBenchedUsers(users) {
         return new Promise((resolve, reject) => {
             resolve();
         });

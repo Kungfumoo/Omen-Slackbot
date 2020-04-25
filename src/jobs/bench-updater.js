@@ -43,10 +43,16 @@ class BenchUpdater extends Job {
     async processBenched(eventDate) {
         let benched = await this.sheet.findBenchedUsers(eventDate);
         let names = await this.database.fetchNamesById(benched); //resolve ids to names
+        let toInsert = [];
 
         names.forEach((name) => {
-            this.database.addBenchedUser(name, eventDate);
+            toInsert.push({
+                name: name,
+                eventDate: eventDate
+            });
         });
+
+        this.database.addBenchedUsers(toInsert);
     }
 }
 

@@ -222,13 +222,19 @@ class Database {
         });
     }
 
-    addBenchedUser(name, eventDate) {
-        eventDate = moment(eventDate).format("Y-M-D");
+    addBenchedUsers(users) {
+        let inserts = [];
+
+        users.forEach((user) => {
+            let eventDate = moment(user.eventDate).format("Y-M-D");
+
+            inserts.push([eventDate, user.name]);
+        });
 
         return new Promise((resolve, reject) => {
             let query = this.connection.format(
-                "INSERT INTO bench VALUES (?, ?)",
-                [eventDate, name]
+                "INSERT INTO bench VALUES ?",
+                [inserts]
             );
 
             this.connection.query(
