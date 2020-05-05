@@ -252,7 +252,7 @@ class Database {
             expireDate = moment(expireDate).format("Y-M-D");
 
             let query = this.connection.format(
-                'INSERT INTO events VALUES (?, ?, ?)',
+                "INSERT INTO events VALUES (?, ?, ?)",
                 [messageId, eventDate, expireDate]
             );
 
@@ -267,7 +267,12 @@ class Database {
 
     fetchLiveEvents() {
         return new Promise((resolve, reject) => {
-            resolve([]);
+            this.connection.query(
+                "SELECT * FROM events WHERE expireDate > CURDATE()",
+                (error, results, fields) => {
+                    resolve(results);
+                }
+            );
         });
     }
 }
