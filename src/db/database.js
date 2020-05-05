@@ -245,6 +245,29 @@ class Database {
             );
         });
     }
+
+    addEvent(messageId, eventDate, expireDate) {
+        return new Promise((resolve, reject) => {
+            resolve();
+        });
+    }
+
+    fetchLiveEvents() {
+        return new Promise((resolve, reject) => {
+            resolve([
+                {
+                    'messageId': "23160419642921720",
+                    'eventDate': "",
+                    'expireDate': ""
+                },
+                {
+                    'messageId': "32160419142921720",
+                    'eventDate': "",
+                    'expireDate': ""
+                }
+            ]);
+        });
+    }
 }
 
 module.exports = Database;

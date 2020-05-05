@@ -22,3 +22,9 @@ CREATE TABLE bench(
     player VARCHAR(255),
     PRIMARY KEY(signDate, player)
 );
+
+CREATE TABLE events (
+    messageId VARCHAR(32) PRIMARY KEY,
+    eventDate DATE,
+    expireDate DATE
+);
