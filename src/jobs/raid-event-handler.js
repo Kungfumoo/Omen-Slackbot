@@ -96,6 +96,11 @@ class RaidEventHandler extends Job {
 
         channel.send(embed)
                .then((message) => {
+                   this.database.addEvent(
+                       message.id,
+                       today,
+                       today.add(COLLECTOR_LISTEN_TIME, 'milliseconds')
+                   );
                    this._handleEventMessage(message, today);
                    this._publishEvent(channel, eventIndex + 1);
                })

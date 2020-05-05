@@ -248,7 +248,20 @@ class Database {
 
     addEvent(messageId, eventDate, expireDate) {
         return new Promise((resolve, reject) => {
-            resolve();
+            eventDate = moment(eventDate).format("Y-M-D");
+            expireDate = moment(expireDate).format("Y-M-D");
+
+            let query = this.connection.format(
+                'INSERT INTO events VALUES (?, ?, ?)',
+                [messageId, eventDate, expireDate]
+            );
+
+            this.connection.query(
+                query,
+                (error, results, fields) => {
+                    resolve();
+                }
+            );
         });
     }
 
