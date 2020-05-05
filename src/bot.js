@@ -26,9 +26,16 @@ const jobsToRun = [
     new jobs.RaidEventHandler(config.raidEvents, client, database, sheetService),
     new jobs.BenchUpdater(config.benchUpdater, client, database, sheetService)
 ];
+let botReady = false;
 
 client.on('ready', () => {
-    console.log(`Logged in as ${client.user.tag}!`);
+    if (botReady) {
+        return;
+    }
+
+    jobsToRun.forEach((job) => {
+        job.onInit();
+    });
 
     client.setInterval(() => {
         jobsToRun.forEach((job) => {
@@ -40,6 +47,9 @@ client.on('ready', () => {
             database.connection.query("SELECT 1", () => {});
         }
     }, CHECK_PERIOD);
+
+    console.log(`Logged in as ${client.user.tag}!`);
+    botReady = true;
 });
 
 client.on('message', msg => {

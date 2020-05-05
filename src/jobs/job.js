@@ -7,6 +7,8 @@ class Job {
         this.database = database;
     }
 
+    onInit() {}
+
     onInterval() {}
 
     processJob() {}

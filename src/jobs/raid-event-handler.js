@@ -13,22 +13,10 @@ class RaidEventHandler extends Job {
         super(config, discord, database);
 
         this.sheet = googleSheet;
-        this.initCollectors();
     }
 
-    async initCollectors() {
-        //grab last three messages from db, check if they are expired, if they are not then re-initilise for the time till expiry.
-        //grab last message ids
-        let currentEvents = await this.database.fetchLiveEvents();
-
-        //re-initalise collectors
-        let channel = this.discord.channels.get(this.config.channel);
-
-        currentEvents.forEach(event => {
-            let message = channel.messages.resolve(event.messageId);
-
-            //this._setupCollector(message, eventDate);
-        });
+    onInit() {
+        this.initCollectors();
     }
 
     onInterval() {
@@ -77,6 +65,20 @@ class RaidEventHandler extends Job {
         promise.then(() => {
             //any post unsign work
             this.sheet.UpdateSignup(eventDate, user.id, 0);
+        });
+    }
+
+    async _initCollectors() {
+        //grab last message ids
+        let currentEvents = await this.database.fetchLiveEvents();
+
+        //re-initalise collectors
+        let channel = this.discord.channels.get(this.config.channel);
+
+        currentEvents.forEach(event => {
+            let message = channel.messages.resolve(event.messageId);
+
+            //this._setupCollector(message, eventDate);
         });
     }
 
