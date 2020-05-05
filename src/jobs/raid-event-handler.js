@@ -16,7 +16,7 @@ class RaidEventHandler extends Job {
     }
 
     onInit() {
-        this.initCollectors();
+        this._initCollectors();
     }
 
     onInterval() {
@@ -75,8 +75,8 @@ class RaidEventHandler extends Job {
         //re-initalise collectors
         let channel = this.discord.channels.get(this.config.channel);
 
-        currentEvents.forEach(event => {
-            let message = channel.messages.resolve(event.messageId);
+        currentEvents.forEach(async (event) => {
+            let message = await channel.fetchMessage(event.messageId);
 
             //this._setupCollector(message, eventDate);
         });
