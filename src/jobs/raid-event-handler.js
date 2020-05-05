@@ -99,7 +99,7 @@ class RaidEventHandler extends Job {
                    this.database.addEvent(
                        message.id,
                        today,
-                       today.add(COLLECTOR_LISTEN_TIME, 'milliseconds')
+                       moment(today).add(COLLECTOR_LISTEN_TIME, 'milliseconds')
                    );
                    this._handleEventMessage(message, today);
                    this._publishEvent(channel, eventIndex + 1);
