@@ -78,7 +78,7 @@ class RaidEventHandler extends Job {
         currentEvents.forEach(async (event) => {
             let message = await channel.fetchMessage(event.messageId);
 
-            //this._setupCollector(message, eventDate);
+            this._setupCollector(message, moment(event.eventDate));
         });
     }
 
