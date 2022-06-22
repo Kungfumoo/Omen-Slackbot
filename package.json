@@ -5,7 +5,7 @@
     "main": "src/bot.js",
     "author": "Kungfumoo (Aaron Winter)",
     "dependencies": {
-        "async": "^3.1.1",
+        "async": "^3.2.2",
         "discord.js": "11.4.2",
         "google-spreadsheet": "2.0.8",
         "moment": "^2.24.0",
